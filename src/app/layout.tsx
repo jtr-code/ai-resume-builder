@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 
-const lato = Lato({
-  variable: "--font-lato",
+const outfitSans = Outfit({
+  variable: "--font-outfit-sans",
   subsets: ["latin"],
-  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${lato.variable} antialiased`}>{children}</body>
+      <body className={`${outfitSans.variable} antialiased`}>{children}</body>
     </html>
   );
 }
