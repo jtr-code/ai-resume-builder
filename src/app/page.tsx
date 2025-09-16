@@ -17,6 +17,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function LandingPage() {
   return (
@@ -52,12 +53,16 @@ function Navbar() {
           </div>
 
           <div className="hidden items-center space-x-4 md:flex">
-            <Button variant="ghost" className="cursor-pointer">
-              Login
-            </Button>
-            <Button className="cursor-pointer bg-neutral-200 text-neutral-900 hover:bg-neutral-300">
-              Sign Up
-            </Button>
+            <Link href={"/auth/signin"}>
+              <Button variant="ghost" className="cursor-pointer">
+                Login
+              </Button>
+            </Link>
+            <Link href={"/auth/signup"}>
+              <Button className="cursor-pointer bg-neutral-200 text-neutral-900 hover:bg-neutral-300">
+                Sign Up
+              </Button>
+            </Link>
           </div>
 
           <Button
