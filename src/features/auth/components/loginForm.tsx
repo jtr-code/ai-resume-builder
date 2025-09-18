@@ -1,4 +1,5 @@
 "use client";
+
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -17,18 +18,48 @@ import { Label } from "@/components/ui/label";
 import { ILoginForm } from "../types/auth.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../schemas/loginSchema";
+import { useLoginUser } from "../api/auth.api";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ILoginForm>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<ILoginForm> = (data: ILoginForm) =>
-    console.log(data);
+  const router = useRouter();
+  const { mutate, isPending } = useLoginUser();
+
+  const onSubmit: SubmitHandler<ILoginForm> = (data: ILoginForm) => {
+    mutate(data, {
+      onSuccess: (response) => {
+        toast.success(response.message);
+        reset();
+        if (response.success && response.data.user) {
+          router.replace("/contact");
+        }
+      },
+      onError: (error: unknown) => {
+        let message = "Login failed";
+        if (error && typeof error === "object" && "response" in error) {
+          const axiosError = error as AxiosError<{ message: string }>;
+          message =
+            axiosError.response?.data?.message ?? axiosError.message ?? message;
+        } else if (error instanceof Error) {
+          message = error.message;
+        }
+        toast.error(message);
+        console.log("Login failed:", error);
+      },
+    });
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -79,8 +110,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                     <AlertTitle>{errors.password.message}</AlertTitle>
                   </Alert>
                 )}
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? "Logging in" : "Login"}
                 </Button>
               </div>
             </div>
