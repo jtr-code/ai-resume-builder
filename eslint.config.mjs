@@ -15,13 +15,13 @@ const eslintConfig = [
   {
     ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts"],
   },
-
   {
     plugins: {
       prettier: prettierPlugin,
     },
     rules: {
       "prettier/prettier": "error",
+      "react/no-unescaped-entities": "off",
     },
   },
 ];
