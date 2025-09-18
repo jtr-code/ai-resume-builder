@@ -1,4 +1,7 @@
+"use client";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,11 +10,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AlertCircleIcon } from "lucide-react";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
+import { ILoginForm } from "../types/auth.types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../schemas/loginSchema";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ILoginForm>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit: SubmitHandler<ILoginForm> = (data: ILoginForm) =>
+    console.log(data);
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -22,7 +39,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
@@ -31,7 +48,14 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   type="email"
                   placeholder="m@example.com"
                   required
+                  {...register("email")}
                 />
+                {errors?.email?.message && (
+                  <Alert variant="destructive">
+                    <AlertCircleIcon />
+                    <AlertTitle>{errors.email.message}</AlertTitle>
+                  </Alert>
+                )}
               </div>
               <div className="grid gap-3">
                 <div className="flex items-center">
@@ -43,9 +67,18 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
-              </div>
-              <div className="flex flex-col gap-3">
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  {...register("password")}
+                />
+                {errors?.password?.message && (
+                  <Alert variant="destructive">
+                    <AlertCircleIcon />
+                    <AlertTitle>{errors.password.message}</AlertTitle>
+                  </Alert>
+                )}
                 <Button type="submit" className="w-full">
                   Login
                 </Button>
