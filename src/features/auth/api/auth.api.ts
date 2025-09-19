@@ -1,13 +1,10 @@
 import { api } from "@/lib/axiosInterceptor";
-import { ILoginForm } from "../types/auth.types";
 import { LOGIN_USER } from "./apiBaseUrls";
-import { useMutation } from "@tanstack/react-query";
+import { ILoginForm } from "../types/auth.types";
 
-export const useLoginUser = () => {
-  return useMutation({
-    mutationFn: async (data: ILoginForm) => {
-      const res = await api.post(LOGIN_USER, data);
-      return res.data;
-    },
-  });
+export const authApi = {
+  loginUser: async (data: ILoginForm) => {
+    const response = await api.post(LOGIN_USER, data);
+    return response.data;
+  },
 };

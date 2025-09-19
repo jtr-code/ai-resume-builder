@@ -18,10 +18,7 @@ import { Label } from "@/components/ui/label";
 import { ILoginForm } from "../types/auth.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../schemas/loginSchema";
-import { useLoginUser } from "../api/auth.api";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { AxiosError } from "axios";
+import { useLogin } from "../hooks/useLogin";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const {
@@ -33,31 +30,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     resolver: zodResolver(loginSchema),
   });
 
-  const router = useRouter();
-  const { mutate, isPending } = useLoginUser();
+  const { mutate: login, isPending } = useLogin();
 
   const onSubmit: SubmitHandler<ILoginForm> = (data: ILoginForm) => {
-    mutate(data, {
-      onSuccess: (response) => {
-        toast.success(response.message);
-        reset();
-        if (response.success && response.data.user) {
-          router.replace("/contact");
-        }
-      },
-      onError: (error: unknown) => {
-        let message = "Login failed";
-        if (error && typeof error === "object" && "response" in error) {
-          const axiosError = error as AxiosError<{ message: string }>;
-          message =
-            axiosError.response?.data?.message ?? axiosError.message ?? message;
-        } else if (error instanceof Error) {
-          message = error.message;
-        }
-        toast.error(message);
-        console.log("Login failed:", error);
-      },
-    });
+    login(data);
+    reset();
   };
 
   return (
