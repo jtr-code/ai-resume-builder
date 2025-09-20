@@ -9,3 +9,12 @@ export interface IRegisterForm {
   password: string;
   confirmPassword: string;
 }
+
+export interface IForgotPwdForm {
+  email: string;
+}
+
+export interface IResetPwdForm {
+  token: string;
+  newPassword: string;
+}

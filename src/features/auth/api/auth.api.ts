@@ -1,6 +1,16 @@
 import { api } from "@/lib/axiosInterceptor";
-import { LOGIN_USER, REGISTER_USER } from "./apiBaseUrls";
-import { ILoginForm, IRegisterForm } from "../types/auth.types";
+import {
+  FORGOT_PASSWORD,
+  LOGIN_USER,
+  REGISTER_USER,
+  RESET_PASSWORD,
+} from "./apiBaseUrls";
+import {
+  ILoginForm,
+  IRegisterForm,
+  IForgotPwdForm,
+  IResetPwdForm,
+} from "../types/auth.types";
 
 export const authApi = {
   loginUser: async (data: ILoginForm) => {
@@ -10,6 +20,16 @@ export const authApi = {
 
   registerUser: async (data: IRegisterForm) => {
     const response = await api.post(REGISTER_USER, data);
+    return response.data;
+  },
+
+  forgotPassword: async (data: IForgotPwdForm) => {
+    const response = await api.post(FORGOT_PASSWORD, data);
+    return response.data;
+  },
+
+  resetPassword: async (data: IResetPwdForm, token: string) => {
+    const response = await api.patch(RESET_PASSWORD(token), data);
     return response.data;
   },
 };
