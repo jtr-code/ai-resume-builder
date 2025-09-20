@@ -4,15 +4,15 @@ import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 import { authApi } from "../api/auth.api";
 
-export const useLogin = () => {
+export const useRegisterMutation = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: authApi.loginUser,
+    mutationFn: authApi.registerUser,
     onSuccess: (response) => {
       if (response.success && response.data.user) {
         toast.success(response.message);
-        router.replace("/contact");
+        router.replace("/auth/signin");
       }
     },
     onError: (error: unknown) => {
@@ -25,7 +25,7 @@ export const useLogin = () => {
         message = error.message;
       }
       toast.error(message);
-      console.log("Login failed:", error);
+      console.log("Register failed:", error);
     },
   });
 };

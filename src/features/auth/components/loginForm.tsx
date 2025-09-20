@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { ILoginForm } from "../types/auth.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../schemas/loginSchema";
-import { useLogin } from "../hooks/useLogin";
+import { useLoginMutation } from "../hooks/useLoginMutation";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const {
@@ -30,7 +30,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     resolver: zodResolver(loginSchema),
   });
 
-  const { mutate: login, isPending } = useLogin();
+  const { mutate: login, isPending } = useLoginMutation();
 
   const onSubmit: SubmitHandler<ILoginForm> = (data: ILoginForm) => {
     login(data);

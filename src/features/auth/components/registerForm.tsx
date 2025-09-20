@@ -18,18 +18,24 @@ import { registerSchema } from "../schemas/registerSchema";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
+import { useRegisterMutation } from "../hooks/useRegisterMutation";
 
 export function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<IRegisterForm>({
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit: SubmitHandler<IRegisterForm> = (data: IRegisterForm) =>
-    console.log(data);
+  const { mutate, isPending } = useRegisterMutation();
+
+  const onSubmit: SubmitHandler<IRegisterForm> = (data: IRegisterForm) => {
+    mutate(data);
+    reset();
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -103,8 +109,8 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<"div"
                   </Alert>
                 )}
               </div>
-              <Button type="submit" className="w-full">
-                Sign Up
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? "Creating Account" : "Sign Up"}
               </Button>
             </div>
 
