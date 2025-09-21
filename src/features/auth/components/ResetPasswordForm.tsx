@@ -35,8 +35,8 @@ export default function ResetPasswordForm({ token }: { token: string }) {
   const { mutate, isPending } = useResetPasswordMutation(token);
 
   const onSubmit: SubmitHandler<IResetPwdForm> = (data: IResetPwdForm) => {
-    console.log(data);
     mutate(data);
+    form.reset();
   };
 
   return (
@@ -44,7 +44,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
       <Card>
         <CardHeader>
           <CardTitle>Reset Password</CardTitle>
-          <CardDescription>Enter your new password</CardDescription>
+          <CardDescription>Create a new password for your account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -55,11 +55,11 @@ export default function ResetPasswordForm({ token }: { token: string }) {
                   name="newPassword"
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="email">New Password</FormLabel>
+                      <FormLabel htmlFor="newPassword">New Password</FormLabel>
                       <FormControl>
                         <Input
                           id="newPassword"
-                          placeholder="Enter your new password"
+                          placeholder="●●●●●●●●"
                           type="password"
                           required
                           {...field}
@@ -70,7 +70,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
                   )}
                 />
                 <Button type="submit" className="w-full" disabled={isPending}>
-                  Send
+                  {isPending ? "Changing" : "Change Password"}
                 </Button>
               </div>
             </form>

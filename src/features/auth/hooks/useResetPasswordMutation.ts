@@ -13,7 +13,7 @@ export const useResetPasswordMutation = (token: string) => {
     onSuccess: (response) => {
       if (response.success) {
         toast.success(response.message);
-        router.replace("/auth/login");
+        router.replace("/auth/signin");
       }
     },
     onError: (error: unknown) => {

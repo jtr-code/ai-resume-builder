@@ -11,7 +11,6 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   function (config) {
-    console.log(config, "config");
     return config;
   },
   function (error) {
@@ -21,7 +20,6 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   function onFulfilled(response) {
-    console.log("response interceptor", response);
     return response;
   },
   function onRejected(error) {
@@ -29,7 +27,6 @@ api.interceptors.response.use(
     //   // await refreshToken();
     //   return api(error.config); // Retry original request
     // }
-    console.log(error, "error interceptor");
     return Promise.reject(error);
   }
 );

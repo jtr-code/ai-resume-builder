@@ -15,6 +15,5 @@ export interface IForgotPwdForm {
 }
 
 export interface IResetPwdForm {
-  token: string;
   newPassword: string;
 }
