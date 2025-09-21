@@ -71,7 +71,7 @@ function Navbar() {
           <Link href={"auth/signin"}>
             <Button variant="ghost">Login</Button>
           </Link>
-          <Link href={"auth/signin"}>
+          <Link href={"auth/signup"}>
             <Button>Sign Up</Button>
           </Link>
         </div>
