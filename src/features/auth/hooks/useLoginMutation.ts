@@ -12,7 +12,7 @@ export const useLoginMutation = () => {
     onSuccess: (response) => {
       if (response.success && response.data.user) {
         toast.success(response.message);
-        router.replace("/contact");
+        router.replace("/builder/contact");
       }
     },
     onError: (error: unknown) => {
