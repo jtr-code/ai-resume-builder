@@ -9,7 +9,7 @@ export const useCreateContactMutation = () => {
   return useMutation({
     mutationFn: contactApi.createContact,
     onSuccess: (response) => {
-      if (response.status) {
+      if (response.success) {
         toast.success(response.message);
         router.push("/builder/experience");
       }

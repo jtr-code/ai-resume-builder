@@ -7,7 +7,7 @@ export const useDeleteContactMutation = () => {
   return useMutation({
     mutationFn: contactApi.deleteContact,
     onSuccess: (response) => {
-      if (response.status) {
+      if (response.success) {
         toast.success(response.message);
       }
     },

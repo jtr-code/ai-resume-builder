@@ -7,7 +7,7 @@ export const useContact = () => {
   return useMutation({
     mutationFn: contactApi.getContact,
     onSuccess: (response) => {
-      if (response.status) {
+      if (response.success) {
         toast.success(response.message);
       }
     },

@@ -210,7 +210,7 @@ export function ContactForm() {
 
             <div className="flex justify-center pt-4">
               <Button type="submit" disabled={isPending} size="lg">
-                {isPending ? "Creating Profile..." : "Create Contact Profile"}
+                {isPending ? "Submitting..." : "Submit"}
               </Button>
             </div>
           </form>

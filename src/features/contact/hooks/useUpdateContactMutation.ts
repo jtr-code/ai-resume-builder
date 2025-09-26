@@ -10,7 +10,7 @@ export const useUpdateContactMutation = (contactId: string) => {
     mutationFn: (data: z.infer<typeof contactFormSchema>) =>
       contactApi.updateContact(contactId, data),
     onSuccess: (response) => {
-      if (response.status) {
+      if (response.success) {
         toast.success(response.message);
       }
     },
