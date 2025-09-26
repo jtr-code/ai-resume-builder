@@ -112,7 +112,7 @@ export function ContactForm() {
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                       }
-                      initialFocus
+                      autoFocus
                     />
                   </PopoverContent>
                 </Popover>
@@ -172,18 +172,30 @@ export function ContactForm() {
                   placeholder="United States"
                   {...register("country")}
                 />
+                {errors.country?.message && (
+                  <p className="text-sm text-red-500">{errors.country.message}</p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="state">State</Label>
                 <Input id="state" placeholder="New York" {...register("state")} />
+                {errors.state?.message && (
+                  <p className="text-sm text-red-500">{errors.state.message}</p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="city">City</Label>
                 <Input id="city" placeholder="New York City" {...register("city")} />
+                {errors.city?.message && (
+                  <p className="text-sm text-red-500">{errors.city.message}</p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="pincode">Postal Code</Label>
                 <Input id="pincode" placeholder="10001" {...register("pincode")} />
+                {errors.pincode?.message && (
+                  <p className="text-sm text-red-500">{errors.pincode.message}</p>
+                )}
               </div>
             </div>
 
@@ -197,6 +209,9 @@ export function ContactForm() {
                   placeholder="https://linkedin.com/in/johndoe"
                   {...register("linkedin")}
                 />
+                {errors.linkedin?.message && (
+                  <p className="text-sm text-red-500">{errors.linkedin.message}</p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="website">Website</Label>
@@ -205,6 +220,9 @@ export function ContactForm() {
                   placeholder="https://johndoe.com"
                   {...register("website")}
                 />
+                {errors.website?.message && (
+                  <p className="text-sm text-red-500">{errors.website.message}</p>
+                )}
               </div>
             </div>
 
