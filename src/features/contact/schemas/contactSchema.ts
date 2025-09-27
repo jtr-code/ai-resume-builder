@@ -7,7 +7,24 @@ export const contactFormSchema = z.object({
   dob: z.date({
     error: "Date of birth is required",
   }),
-  image: z.string().min(1, "Image is required"),
+  image: z
+    .any()
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "Image is required",
+    })
+    .refine(
+      (files) => files instanceof FileList && files[0].size <= 5 * 1024 * 1024,
+      {
+        message: "Image must be 5MB or smaller",
+      }
+    )
+    .refine(
+      (files) => files instanceof FileList && files[0].type.startsWith("image/"),
+      {
+        message: "File must be an image",
+      }
+    )
+    .transform((files) => files[0]),
   email: z.email("Invalid email"),
   phone: z.string().min(7, "Invalid phone number"),
   country: z.string().min(1, "Country is required"),
