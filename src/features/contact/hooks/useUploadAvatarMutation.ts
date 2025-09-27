@@ -1,19 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import { contactApi } from "../api/contact.api";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { handleMutationError } from "@/lib/errorHandler";
 
-export const useCreateContactMutation = () => {
-  const router = useRouter();
+export const useUploadAvatarMutation = () => {
   return useMutation({
-    mutationFn: contactApi.createContact,
+    mutationFn: (formData: FormData) => contactApi.uploadAvatar(formData),
     onSuccess: (response) => {
       if (response.success) {
         toast.success(response.message);
-        router.push("/builder/experience");
+        return response.data.url;
       }
     },
-    onError: (error) => handleMutationError(error, "Failed to create contact"),
+    onError: (error) => handleMutationError(error, "Failed to upload avatar"),
   });
 };

@@ -4,6 +4,7 @@ import {
   DELETE_CONTACT,
   GET_CONTACT,
   UPDATE_CONTACT,
+  UPLOAD_AVATAR,
 } from "./apiBaseUrls";
 import { contactFormSchema } from "../schemas/contactSchema";
 import z from "zod";
@@ -29,6 +30,13 @@ export const contactApi = {
 
   deleteContact: async () => {
     const response = await api.delete(DELETE_CONTACT);
+    return response.data;
+  },
+
+  uploadAvatar: async (formData: FormData) => {
+    const response = await api.post(UPLOAD_AVATAR, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   },
 };
