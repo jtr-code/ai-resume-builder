@@ -3,6 +3,7 @@ import {
   FORGOT_PASSWORD,
   LOG_OUT,
   LOGIN_USER,
+  REFRESH_TOKEN,
   REGISTER_USER,
   RESET_PASSWORD,
 } from "./apiBaseUrls";
@@ -36,6 +37,11 @@ export const authApi = {
 
   logOut: async () => {
     const response = await api.post(LOG_OUT);
+    return response.data;
+  },
+
+  refreshToken: async () => {
+    const response = await api.post(REFRESH_TOKEN);
     return response.data;
   },
 };

@@ -1,17 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { contactApi } from "../api/contact.api";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { handleMutationError } from "@/lib/errorHandler";
 
 export const useCreateContactMutation = () => {
-  const router = useRouter();
   return useMutation({
     mutationFn: contactApi.createContact,
     onSuccess: (response) => {
       if (response.success) {
         toast.success(response.message);
-        router.push("/builder/experience");
       }
     },
     onError: (error) => handleMutationError(error, "Failed to create contact"),

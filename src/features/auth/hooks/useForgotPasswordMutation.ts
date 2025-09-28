@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { AxiosError } from "axios";
 import { authApi } from "../api/auth.api";
+import { handleMutationError } from "@/lib/errorHandler";
 
 export const useForgotPasswordMutation = () => {
   return useMutation({
@@ -11,17 +11,7 @@ export const useForgotPasswordMutation = () => {
         toast.success(response.message);
       }
     },
-    onError: (error: unknown) => {
-      let message = "Something went wrong!";
-      if (error && typeof error === "object" && "response" in error) {
-        const axiosError = error as AxiosError<{ message: string }>;
-        message =
-          axiosError.response?.data?.message ?? axiosError.message ?? message;
-      } else if (error instanceof Error) {
-        message = error.message;
-      }
-      toast.error(message);
-      console.log("Failed to sent forgot password link", error);
-    },
+    onError: (error) =>
+      handleMutationError(error, "Failed to sent forgot password link"),
   });
 };

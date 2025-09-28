@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { IResetPwdForm } from "../types/auth.types";
+import { handleMutationError } from "@/lib/errorHandler";
 
 export const useResetPasswordMutation = (token: string) => {
   const router = useRouter();
@@ -16,17 +17,6 @@ export const useResetPasswordMutation = (token: string) => {
         router.replace("/auth/signin");
       }
     },
-    onError: (error: unknown) => {
-      let message = "Something went wrong!";
-      if (error && typeof error === "object" && "response" in error) {
-        const axiosError = error as AxiosError<{ message: string }>;
-        message =
-          axiosError.response?.data?.message ?? axiosError.message ?? message;
-      } else if (error instanceof Error) {
-        message = error.message;
-      }
-      toast.error(message);
-      console.log("Reset password failed:", error);
-    },
+    onError: (error) => handleMutationError(error, "Reset password failed"),
   });
 };
