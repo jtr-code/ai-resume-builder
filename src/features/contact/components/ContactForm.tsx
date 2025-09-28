@@ -14,9 +14,7 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { CalendarIcon, Mail, Phone } from "lucide-react";
 import { contactFormSchema } from "../schemas/contactSchema";
 import { useCreateContactMutation } from "../hooks/useCreateContactMutation";
-import { useUploadAvatarMutation } from "../hooks/useUploadAvatarMutation";
-import { toast } from "sonner";
-import { handleMutationError } from "@/lib/errorHandler";
+import { ContactUserUploadDialog } from "./ContactUserUploadDialog";
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
 
@@ -47,40 +45,12 @@ export function ContactForm() {
     },
   });
 
-  const { mutate: createContact, isPending, isSuccess } = useCreateContactMutation();
-  const { mutateAsync: uploadAvatar } = useUploadAvatarMutation();
+  const { mutate, isPending } = useCreateContactMutation();
 
   const dob = watch("dob");
 
   const onSubmit: SubmitHandler<ContactFormValues> = async (data) => {
-    if (!data.image) {
-      toast.error("Please select an image");
-      return;
-    }
-
-    try {
-      const formData = new FormData();
-      formData.append("avatar", data.image);
-
-      const uploadResponse = await uploadAvatar(formData);
-      if (!uploadResponse?.success || !uploadResponse.data?.url) {
-        toast.error("Image upload failed");
-        return;
-      }
-
-      const contactData = {
-        ...data,
-        image: uploadResponse.data.url,
-      };
-
-      createContact(contactData);
-
-      if (isSuccess) {
-        reset();
-      }
-    } catch (error) {
-      handleMutationError(error, "Something went wrong");
-    }
+    mutate(data);
   };
 
   return (
@@ -153,13 +123,8 @@ export function ContactForm() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="image">Image</Label>
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  {...register("image")}
-                />
+                <Label htmlFor="image">Upload Avatar</Label>
+                <ContactUserUploadDialog />
                 {errors.image && (
                   <p className="text-sm text-red-500">
                     {errors.image.message?.toString()}
