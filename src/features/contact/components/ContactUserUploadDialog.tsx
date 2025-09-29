@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useUploadAvatarMutation } from "../hooks/useUploadAvatarMutation";
 import { toast } from "sonner";
-import { handleMutationError } from "@/lib/errorHandler";
+import { Progress } from "@/components/ui/progress";
 
 export function ContactUserUploadDialog() {
   const [open, setOpen] = React.useState(false);
@@ -46,7 +46,7 @@ export function ContactUserUploadDialog() {
               MB.
             </DialogDescription>
           </DialogHeader>
-          <UserAvatarForm />
+          <UserAvatarForm setOpen={setOpen} />
         </DialogContent>
       </Dialog>
     );
@@ -65,7 +65,7 @@ export function ContactUserUploadDialog() {
             MB.
           </DrawerDescription>
         </DrawerHeader>
-        <UserAvatarForm className="px-4" />
+        <UserAvatarForm className="px-4" setOpen={setOpen} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -76,17 +76,16 @@ export function ContactUserUploadDialog() {
   );
 }
 
-function UserAvatarForm({ className }: React.ComponentProps<"form">) {
+function UserAvatarForm({
+  className,
+  setOpen,
+}: React.ComponentProps<"form"> & { setOpen: (open: boolean) => void }) {
   const [image, setImage] = React.useState<File | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
-  const { mutate: uploadAvatar, isPending, reset } = useUploadAvatarMutation();
+  const { mutate: uploadAvatar, isPending, progress } = useUploadAvatarMutation();
 
-  interface HandleImageUploadProps {
-    image: File | null;
-  }
-
-  const handleImageUpload = (image: HandleImageUploadProps["image"]) => {
+  const handleImageUpload = (image: File | null) => {
     if (!image) {
       toast.error("Please provide an image");
       return;
@@ -96,16 +95,9 @@ function UserAvatarForm({ className }: React.ComponentProps<"form">) {
     imageData.append("avatar", image);
 
     uploadAvatar(imageData, {
-      onSuccess: (url) => {
-        if (url) {
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-        }
-      },
-      onError: (error) => {
-        console.error("Upload failed:", error);
-        handleMutationError(error, "Upload image failed");
+      onSuccess: () => {
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        setOpen(false);
       },
     });
   };
@@ -124,6 +116,13 @@ function UserAvatarForm({ className }: React.ComponentProps<"form">) {
           }
         }}
       />
+      {isPending && (
+        <div className="space-y-2">
+          <Progress value={progress} />
+          <p className="text-muted-foreground text-sm">{progress}%</p>
+        </div>
+      )}
+
       <Button
         type="button"
         onClick={() => handleImageUpload(image)}

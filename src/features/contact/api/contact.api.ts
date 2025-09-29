@@ -33,9 +33,18 @@ export const contactApi = {
     return response.data;
   },
 
-  uploadAvatar: async (formData: FormData) => {
+  uploadAvatar: async (
+    formData: FormData,
+    onProgress?: (progress: number) => void
+  ) => {
     const response = await api.post(UPLOAD_AVATAR, formData, {
       headers: { "Content-Type": "multipart/form-data" },
+      onUploadProgress: (event) => {
+        if (event.total) {
+          const percent = Math.round((event.loaded * 100) / event.total);
+          onProgress?.(percent);
+        }
+      },
     });
     return response.data;
   },
