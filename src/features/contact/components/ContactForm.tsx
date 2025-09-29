@@ -124,7 +124,10 @@ export function ContactForm() {
 
               <div className="grid gap-2">
                 <Label htmlFor="image">Upload Avatar</Label>
-                <ContactUserUploadDialog />
+                <ContactUserUploadDialog
+                  onUploadSuccess={(url) => setValue("image", url)}
+                  imageUrl={watch("image")}
+                />
                 {errors.image && (
                   <p className="text-sm text-red-500">
                     {errors.image.message?.toString()}

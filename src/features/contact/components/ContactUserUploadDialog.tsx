@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Drawer,
   DrawerClose,
@@ -27,17 +28,38 @@ import { Input } from "@/components/ui/input";
 import { useUploadAvatarMutation } from "../hooks/useUploadAvatarMutation";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
+import { AvatarResponse } from "../types/contact.types";
 
-export function ContactUserUploadDialog() {
+export function ContactUserUploadDialog({
+  onUploadSuccess,
+  imageUrl,
+}: {
+  onUploadSuccess: (url: string) => void;
+  imageUrl?: AvatarResponse | null;
+}) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const Trigger = (
+    <Button variant="secondary" className="flex items-center gap-2">
+      {imageUrl && imageUrl.data.url ? (
+        <>
+          <Avatar className="size-8 border-2 border-white">
+            <AvatarImage src={imageUrl.data.url} alt="Avatar" />
+            <AvatarFallback>AV</AvatarFallback>
+          </Avatar>
+          <span className="text-muted-foreground">Change avatar</span>
+        </>
+      ) : (
+        "Pick an avatar"
+      )}
+    </Button>
+  );
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="secondary">Pick an avatar</Button>
-        </DialogTrigger>
+        <DialogTrigger asChild>{Trigger}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Photo upload</DialogTitle>
@@ -46,7 +68,7 @@ export function ContactUserUploadDialog() {
               MB.
             </DialogDescription>
           </DialogHeader>
-          <UserAvatarForm setOpen={setOpen} />
+          <UserAvatarForm setOpen={setOpen} onUploadSuccess={onUploadSuccess} />
         </DialogContent>
       </Dialog>
     );
@@ -54,9 +76,7 @@ export function ContactUserUploadDialog() {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button variant="secondary">Pick an avatar</Button>
-      </DrawerTrigger>
+      <DrawerTrigger asChild>{Trigger}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>Photo upload</DrawerTitle>
@@ -65,7 +85,11 @@ export function ContactUserUploadDialog() {
             MB.
           </DrawerDescription>
         </DrawerHeader>
-        <UserAvatarForm className="px-4" setOpen={setOpen} />
+        <UserAvatarForm
+          className="px-4"
+          setOpen={setOpen}
+          onUploadSuccess={onUploadSuccess}
+        />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -79,7 +103,11 @@ export function ContactUserUploadDialog() {
 function UserAvatarForm({
   className,
   setOpen,
-}: React.ComponentProps<"form"> & { setOpen: (open: boolean) => void }) {
+  onUploadSuccess,
+}: React.ComponentProps<"form"> & {
+  setOpen: (open: boolean) => void;
+  onUploadSuccess: (url: string) => void;
+}) {
   const [image, setImage] = React.useState<File | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -95,9 +123,10 @@ function UserAvatarForm({
     imageData.append("avatar", image);
 
     uploadAvatar(imageData, {
-      onSuccess: () => {
+      onSuccess: (url) => {
         if (fileInputRef.current) fileInputRef.current.value = "";
         setOpen(false);
+        onUploadSuccess(url);
       },
     });
   };
@@ -116,6 +145,7 @@ function UserAvatarForm({
           }
         }}
       />
+
       {isPending && (
         <div className="space-y-2">
           <Progress value={progress} />
