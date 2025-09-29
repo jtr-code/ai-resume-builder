@@ -51,6 +51,7 @@ export function ContactForm() {
 
   const onSubmit: SubmitHandler<ContactFormValues> = async (data) => {
     mutate(data);
+    reset();
   };
 
   return (
