@@ -28,24 +28,23 @@ import { Input } from "@/components/ui/input";
 import { useUploadAvatarMutation } from "../hooks/useUploadAvatarMutation";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
-import { AvatarResponse } from "../types/contact.types";
 
 export function ContactUserUploadDialog({
   onUploadSuccess,
   imageUrl,
 }: {
   onUploadSuccess: (url: string) => void;
-  imageUrl?: AvatarResponse | null;
+  imageUrl?: string | null;
 }) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const Trigger = (
     <Button variant="secondary" className="flex items-center gap-2">
-      {imageUrl && imageUrl.data.url ? (
+      {imageUrl ? (
         <>
           <Avatar className="size-8 border-2 border-white">
-            <AvatarImage src={imageUrl.data.url} alt="Avatar" />
+            <AvatarImage src={imageUrl} alt="Avatar" />
             <AvatarFallback>AV</AvatarFallback>
           </Avatar>
           <span className="text-muted-foreground">Change avatar</span>
@@ -123,10 +122,10 @@ function UserAvatarForm({
     imageData.append("avatar", image);
 
     uploadAvatar(imageData, {
-      onSuccess: (url) => {
+      onSuccess: (res) => {
         if (fileInputRef.current) fileInputRef.current.value = "";
         setOpen(false);
-        onUploadSuccess(url);
+        onUploadSuccess(res.data.url);
       },
     });
   };
