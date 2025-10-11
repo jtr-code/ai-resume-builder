@@ -1,11 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { contactApi } from "../api/contact.api";
 import { toast } from "sonner";
 import { handleMutationError } from "@/lib/errorHandler";
 
-export const useContact = () => {
-  return useMutation({
-    mutationFn: contactApi.getContact,
+export const useContactQuery = () => {
+  return useQuery({
+    queryKey: ["contact"],
+    queryFn: contactApi.getContact,
     onSuccess: (response) => {
       if (response.success) {
         toast.success(response.message);
