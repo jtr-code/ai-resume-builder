@@ -3,7 +3,6 @@ import {
   CREATE_CONTACT,
   DELETE_CONTACT,
   GET_CONTACT,
-  UPDATE_CONTACT,
   UPLOAD_AVATAR,
 } from "./apiBaseUrls";
 import { contactFormSchema } from "../schemas/contactSchema";
@@ -17,14 +16,6 @@ export const contactApi = {
 
   createContact: async (data: z.infer<typeof contactFormSchema>) => {
     const response = await api.post(CREATE_CONTACT, data);
-    return response.data;
-  },
-
-  updateContact: async (
-    contactId: string,
-    data: z.infer<typeof contactFormSchema>
-  ) => {
-    const response = await api.patch(`${UPDATE_CONTACT}/${contactId}`, data);
     return response.data;
   },
 
