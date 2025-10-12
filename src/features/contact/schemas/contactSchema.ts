@@ -17,3 +17,5 @@ export const contactFormSchema = z.object({
   linkedin: z.url("Must be a valid URL").optional().or(z.literal("")),
   website: z.url("Must be a valid URL").optional().or(z.literal("")),
 });
+
+export type ContactFormValues = z.infer<typeof contactFormSchema>;

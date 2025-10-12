@@ -7,6 +7,7 @@ export const useContactQuery = () => {
   return useQuery({
     queryKey: ["contact"],
     queryFn: contactApi.getContact,
+    refetchOnWindowFocus: false,
     onSuccess: (response) => {
       if (response.success) {
         toast.success(response.message);

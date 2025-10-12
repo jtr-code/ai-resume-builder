@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -12,47 +11,55 @@ import { Separator } from "@/components/ui/separator";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { CalendarIcon, Mail, Phone } from "lucide-react";
-import { contactFormSchema } from "../schemas/contactSchema";
+import { contactFormSchema, ContactFormValues } from "../schemas/contactSchema";
 import { useCreateContactMutation } from "../hooks/useCreateContactMutation";
 import { ContactUserUploadDialog } from "./ContactUserUploadDialog";
-
-type ContactFormValues = z.infer<typeof contactFormSchema>;
+import { useContactQuery } from "../hooks/useContactQuery";
+import { FormSkeleton } from "@/components/FormSkeleton";
 
 export function ContactForm() {
+  const { data, isLoading } = useContactQuery();
+  const { mutate, isPending } = useCreateContactMutation();
+
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
     setValue,
     watch,
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      jobTitle: "",
-      dob: undefined,
-      image: undefined,
-      email: "",
-      phone: "",
-      country: "",
-      state: "",
-      city: "",
-      pincode: "",
-      linkedin: "",
-      website: "",
-    },
+    values: data?.data
+      ? {
+          ...data.data,
+          dob: data.data.dob ? new Date(data.data.dob) : "",
+        }
+      : {
+          firstName: "",
+          lastName: "",
+          jobTitle: "",
+          dob: "",
+          image: "",
+          email: "",
+          phone: "",
+          country: "",
+          state: "",
+          city: "",
+          pincode: "",
+          linkedin: "",
+          website: "",
+        },
   });
-
-  const { mutate, isPending } = useCreateContactMutation();
 
   const dob = watch("dob");
 
-  const onSubmit: SubmitHandler<ContactFormValues> = async (data) => {
-    mutate(data);
-    reset();
+  const onSubmit: SubmitHandler<ContactFormValues> = async (formData) => {
+    mutate(formData);
   };
+
+  if (isLoading) {
+    return <FormSkeleton rows={6} cols={2} />;
+  }
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
@@ -235,7 +242,7 @@ export function ContactForm() {
 
             <div className="flex justify-center pt-4">
               <Button type="submit" disabled={isPending} size="lg">
-                {isPending ? "Submitting..." : "Submit"}
+                {isPending ? "Creating..." : "Create Contact"}
               </Button>
             </div>
           </form>
