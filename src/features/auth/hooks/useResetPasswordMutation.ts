@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { authApi } from "../api/auth.api";
-import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { IResetPwdForm } from "../types/auth.types";

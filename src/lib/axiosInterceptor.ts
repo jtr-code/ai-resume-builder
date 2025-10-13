@@ -57,7 +57,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
-
+        /* eslint-disable @typescript-eslint/no-unused-vars */
         try {
           await authApi.logOut();
         } catch (_) {
