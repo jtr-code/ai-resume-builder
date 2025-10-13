@@ -1,0 +1,48 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.cjs
+
+# pnpm store
+pnpm-lock.yaml
+
+# Build outputs
+.next
+out
+dist
+build
+
+# OS / IDE junk
+.DS_Store
+Thumbs.db
+*.log
+.vscode
+.idea
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Next.js special files
+.next/
+.vercel
+
+# Coverage / test outputs
+coverage
+*.lcov
+
+# Generated files
+*.min.js
+*.min.css
+
+# Optional: if you’re using storybook or similar
+storybook-static
+
+# Optional: if you’re using turborepo
+turbo
