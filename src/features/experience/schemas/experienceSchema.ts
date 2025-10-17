@@ -33,7 +33,6 @@ export const experienceSchema = z
       .optional(),
 
     currentlyWorkHere: z.boolean(),
-    resumeId: z.uuid("Invalid resume ID"),
   })
   .refine(
     (data) =>

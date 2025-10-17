@@ -34,12 +34,13 @@ export function ExperienceForm() {
     watch,
   } = useForm<ExperienceFormValues>({
     resolver: zodResolver(experienceSchema),
-    values: data?.data
+    values: data?.data[0]
       ? {
-          ...data.data,
-          currentlyWorkHere: data.data.currentlyWorkHere
-            ? data.data.currentlyWorkHere
-            : false,
+          ...data.data[0],
+          currentlyWorkHere:
+            typeof data.data.currentlyWorkHere === "boolean"
+              ? data.data.currentlyWorkHere
+              : false,
         }
       : {
           jobTitle: "",
@@ -51,6 +52,7 @@ export function ExperienceForm() {
           startYear: new Date().getFullYear(),
           endMonth: "",
           endYear: "",
+          currentlyWorkHere: false,
         },
   });
 
