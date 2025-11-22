@@ -12,11 +12,11 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
-      "pnpm lint --fix",
-      "pnpm format"
+      "bun lint --fix",
+      "bun format"
     ],
     "*.{json,css,md}": [
-      "pnpm format"
+      "bun format"
     ]
   },
   "dependencies": {
