@@ -116,7 +116,7 @@ export function ExperienceForm() {
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
             <div className="grid gap-2">
-              <Label>Start Month</Label>
+              <Label>Start Months</Label>
               <Controller
                 control={control}
                 name="startMonth"
